@@ -58,6 +58,11 @@ app.get('/loggedIn', authCheck, (req, res) => {
   res.send(req.user)
 })
 
+app.get('/logout', (req, res) => {
+  req.logout()
+  res.redirect('/')
+})
+
 db.sync().then(() => {
   app.listen(port, () => {
     console.log(`listening on port ${port}...`);
