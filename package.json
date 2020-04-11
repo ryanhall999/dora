@@ -1,5 +1,5 @@
 {
-	"name": "BoilerPlate",
+	"name": "dora",
 	"version": "1.0.0",
 	"description": "",
 	"main": "app.js",
@@ -13,6 +13,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"axios": "^0.19.2",
 		"cookie-session": "^1.4.0",
 		"express": "^4.17.1",
 		"google-maps-react": "^2.0.2",

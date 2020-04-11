@@ -1,8 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
+import { getCurrentPosition } from "./services";
+
+async function getLocation() {
+	let loc = await getCurrentPosition();
+	let lat = loc.coords.latitude;
+	let lon = loc.coords.longitude;
+	let newArr = [lat, lon];
+	return newArr;
+}
 
 export default function Map({ options, onMount, className, onMountProps }) {
 	const ref = useRef();
 	const [map, setMap] = useState();
+	const [loc, getLoc] = useState(getLocation());
+
+	console.log(loc);
 
 	useEffect(() => {
 		const onLoad = () =>
@@ -22,7 +34,7 @@ export default function Map({ options, onMount, className, onMountProps }) {
 
 	return (
 		<div
-			style={{ height: `60vh`, margin: `1em 0`, borderRadius: `0.5em` }}
+			style={{ height: `90%`, margin: `1rem`, borderRadius: `0.5em` }}
 			{...{ ref, className }}
 		/>
 	);
@@ -30,7 +42,7 @@ export default function Map({ options, onMount, className, onMountProps }) {
 
 Map.defaultProps = {
 	options: {
-		center: { lat: 48, lng: 8 },
-		zoom: 5,
+		center: { lat: 30.33, lng: -81.65 },
+		zoom: 17,
 	},
 };
