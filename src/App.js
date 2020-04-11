@@ -8,6 +8,7 @@ import {
 } from "react-router-dom"
 import Login from "./Login";
 import axios from 'axios'
+import Logout from "./Logout";
 
 const App = () => {
 	const [user, setUser] = useState({})
@@ -29,7 +30,9 @@ const App = () => {
 							<Link to="/">Map</Link>
 						</li>
 						<li>
-							<Link to="/login">Login</Link>
+							{
+								user.googleid ? <Logout /> : <Login />
+							}
 						</li>
 					</ul>
 				</nav>
@@ -43,10 +46,6 @@ const App = () => {
 							<Map />
 						</div>
 					</Route>
-					<Route exact path="/login">
-						<Login />
-					</Route>
-
 				</Switch>
 			</div>
 			
