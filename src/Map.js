@@ -4,27 +4,31 @@ import { getCurrentPosition } from "./services";
 export default function Map({ options, onMount, className, onMountProps }) {
 	const ref = useRef();
 	const [map, setMap] = useState();
-	const [loc, setLoc] = useState({ lat: 30.33, lon: -81.65 });
+	const [loc, setLoc] = useState({ lat: 30.33, lng: -81.65 });
 
 	async function getLocation() {
 		let location = await getCurrentPosition();
 		let locationCurrent = {
 			lat: location.coords.latitude,
-			lon: location.coords.longitude,
+			lng: location.coords.longitude,
 		};
+		console.log(locationCurrent);
 		setLoc(locationCurrent);
 	}
 
-	setTimeout(getLocation, 10000);
-
 	Map.defaultProps = {
 		options: {
-			center: { lat: loc.lat, lng: loc.lon },
+			draggable: false,
+			zoomControl: false,
+			scrollwheel: false,
+			disableDoubleClickZoom: true,
+			center: { lat: loc.lat, lng: loc.lng },
 			zoom: 15,
 		},
 	};
 
 	useEffect(() => {
+		getLocation();
 		const onLoad = () =>
 			setMap(new window.google.maps.Map(ref.current, options));
 		if (!window.google) {
