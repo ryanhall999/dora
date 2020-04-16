@@ -17,21 +17,18 @@ export default function Map({ options, onMount, className, onMountProps }) {
 	}
 
 	Map.defaultProps = {
-		options: {
-			// draggable: false,
-			// zoomControl: false,
-			// scrollwheel: false,
-			disableDoubleClickZoom: true,
-			center: { lat: loc.lat, lng: loc.lng },
-			zoom: 18,
-		},
+		options: {},
 	};
 
 	function initMap() {
 		var map = new google.maps.Map(document.getElementById("map"), {
-			zoom: 3,
-			center: { lat: 0, lng: -180 },
+			center: { lat: loc.lat, lng: loc.lng },
 			mapTypeId: "terrain",
+			draggable: false,
+			zoomControl: false,
+			scrollwheel: false,
+			disableDoubleClickZoom: true,
+			zoom: 18,
 		});
 
 		var flightPlanCoordinates = [
@@ -59,12 +56,5 @@ export default function Map({ options, onMount, className, onMountProps }) {
 
 	if (map && typeof onMount === `function`) onMount(map, onMountProps);
 
-	return (
-		<div>
-			<div
-				style={{ height: `90%`, margin: `1rem`, borderRadius: `0.5em` }}
-				{...{ ref, className }}
-			/>
-		</div>
-	);
+	return <div></div>;
 }
