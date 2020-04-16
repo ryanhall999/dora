@@ -1,3 +1,5 @@
+import React from "react";
+
 export function getCurrentPosition() {
 	return new Promise((res, rej) => {
 		navigator.geolocation.getCurrentPosition((position) => {

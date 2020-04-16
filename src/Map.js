@@ -18,36 +18,53 @@ export default function Map({ options, onMount, className, onMountProps }) {
 
 	Map.defaultProps = {
 		options: {
-			draggable: false,
-			zoomControl: false,
-			scrollwheel: false,
+			// draggable: false,
+			// zoomControl: false,
+			// scrollwheel: false,
 			disableDoubleClickZoom: true,
 			center: { lat: loc.lat, lng: loc.lng },
-			zoom: 15,
+			zoom: 18,
 		},
 	};
 
+	function initMap() {
+		var map = new google.maps.Map(document.getElementById("map"), {
+			zoom: 3,
+			center: { lat: 0, lng: -180 },
+			mapTypeId: "terrain",
+		});
+
+		var flightPlanCoordinates = [
+			{ lat: 37.772, lng: -122.214 },
+			{ lat: 21.291, lng: -157.821 },
+			{ lat: -18.142, lng: 178.431 },
+			{ lat: -27.467, lng: 153.027 },
+		];
+
+		var flightPath = new google.maps.Polyline({
+			path: flightPlanCoordinates,
+			geodesic: true,
+			strokeColor: "#FF0000",
+			strokeOpacity: 1.0,
+			strokeWeight: 2,
+		});
+
+		flightPath.setMap(map);
+	}
+
 	useEffect(() => {
 		getLocation();
-		const onLoad = () =>
-			setMap(new window.google.maps.Map(ref.current, options));
-		if (!window.google) {
-			const script = document.createElement(`script`);
-			script.src =
-				`https://maps.googleapis.com/maps/api/js?key=` +
-				"AIzaSyD57Szt8xDBZBRP6RTpusrGmrFE0XvzSuU";
-			document.head.append(script);
-			script.addEventListener(`load`, onLoad);
-			return () => script.removeEventListener(`load`, onLoad);
-		} else onLoad();
+		initMap();
 	}, [options]);
 
 	if (map && typeof onMount === `function`) onMount(map, onMountProps);
 
 	return (
-		<div
-			style={{ height: `90%`, margin: `1rem`, borderRadius: `0.5em` }}
-			{...{ ref, className }}
-		/>
+		<div>
+			<div
+				style={{ height: `90%`, margin: `1rem`, borderRadius: `0.5em` }}
+				{...{ ref, className }}
+			/>
+		</div>
 	);
 }
