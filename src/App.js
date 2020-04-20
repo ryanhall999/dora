@@ -27,7 +27,6 @@ const App = () => {
 					</ul>
 				</nav>
 				{user.googleid ? <h3>Welcome {user.name}</h3> : null}
-
 				<Switch>
 					<Route exact path="/map">
 						<div className="mapBox">
