@@ -8,9 +8,6 @@ export default function Map({ options, onMount, className, onMountProps }) {
 	const [loc, setLoc] = useState({ lat: 30.33, lng: -81.65 });
 	const [markers, setMarkers] = useState([]);
 
-	var labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	var labelIndex = 0;
-
 	async function getLocation() {
 		let location = await getCurrentPosition();
 		let locationCurrent = {
@@ -35,7 +32,7 @@ export default function Map({ options, onMount, className, onMountProps }) {
 			// zoomControl: false,
 			// scrollwheel: false,
 			disableDoubleClickZoom: true,
-			zoom: 10,
+			zoom: 12,
 		});
 		return map;
 	}
@@ -47,13 +44,23 @@ export default function Map({ options, onMount, className, onMountProps }) {
 			await getMarkers().then((returnedMarkers) => {
 				console.log(returnedMarkers);
 				returnedMarkers.forEach((marker) => {
-					new google.maps.Marker({
+					var infowindow = new google.maps.InfoWindow({
+						content: `<h1>${marker.name}</h1>
+						<h3>$${marker.price}   ${marker.discount * 100}% Off</h3>
+						<img src=${marker.image} />
+						<p>${marker.description}</p>`,
+						maxWidth: 500,
+					});
+					var marker = new google.maps.Marker({
 						position: {
 							lat: marker.lat,
 							lng: marker.lng,
 						},
 						map: map,
 						label: marker.name,
+					});
+					marker.addListener("click", function () {
+						infowindow.open(map, marker);
 					});
 				});
 			});
