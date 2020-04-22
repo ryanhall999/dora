@@ -1,4 +1,6 @@
 #map {
 	width: 98%;
-	position: fixed;
+	position: relative;
+	overflow: hidden;
+	height: 0;
 }

@@ -32,6 +32,11 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname)));
 
+app.get("/", (req, res, next) => {
+  console.log(req.user);
+  res.sendFile(path.join(__dirname, "/index.html"));
+});
+
 //authenticate with google
 app.get(
   "/google",
@@ -64,6 +69,10 @@ app.get("/loggedIn", authCheck, (req, res) => {
 app.get("/logout", (req, res) => {
   req.logout();
   res.redirect("/");
+});
+
+app.get("/api/markers", (req, res, next) => {
+  db.getMarkers().then(markers => res.send(markers));
 });
 
 app.get("*", (req, res, next) => {
