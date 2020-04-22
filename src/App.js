@@ -11,18 +11,15 @@ import Login from "./Components/Login";
 import Home from "./Components/Home";
 import NotFound from "./Components/NotFound";
 import LoginScreen from "./Components/LoginScreen";
+import Header from "./Components/Header";
 
 const App = () => {
   console.log(LoginScreen);
   return (
     <div>
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/login" component={LoginScreen} />
-          <Route path="*" component={NotFound} />
-        </Switch>
-      </Router>
+      <Header />
+
+      <LoginScreen />
     </div>
   );
 };

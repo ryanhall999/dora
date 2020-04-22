@@ -1,5 +1,6 @@
 .login {
   padding: 60px 0;
+  background-image: url("https://images.unsplash.com/photo-1561906309-189467bf5e60?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80");
 }
 
 .login form {
@@ -9,4 +10,6 @@
 
 .google-button {
   padding: 10px 0 0 0;
+  margin: 0 auto;
+  max-width: 320px;
 }
