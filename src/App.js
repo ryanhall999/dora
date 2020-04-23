@@ -12,14 +12,22 @@ import Home from "./Components/Home";
 import NotFound from "./Components/NotFound";
 import LoginScreen from "./Components/LoginScreen";
 import Header from "./Components/Header";
+import Map from "./Components/Map";
 
 const App = () => {
   console.log(LoginScreen);
   return (
     <div>
       <Header />
-
-      <LoginScreen />
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/login" component={LoginScreen} />
+          <Route path="/map" component={Map} />
+          <Route path="*" component={NotFound} />
+        </Switch>
+      </Router>
+      {/* <Map /> */}
     </div>
   );
 };
