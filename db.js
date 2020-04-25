@@ -16,7 +16,7 @@ const getProducts = (amount) => {
 		let price = faker.commerce.price(0.99, 20.0, 2);
 		let descText = faker.lorem.sentence(5);
 		let nameText = faker.lorem.sentence(2);
-		let discount = (Math.random() * (0.05 + 0.5) + 0.02).toFixed(4);
+		let discount = (Math.random() * (0.05 + 0.5)).toFixed(2);
 		let img = faker.image.imageUrl(150, 150, "animals", true);
 		let lat = 30 + Math.random();
 		let lng = -81 - Math.random();

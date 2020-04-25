@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import Axios from "axios";
 import "./List.css";
-import { ListGroupItem, Card } from "react-bootstrap";
+import { ListGroupItem, Card, InputGroup, FormControl } from "react-bootstrap";
 
 export default function List() {
 	const [markers, setMarkers] = useState([]);
@@ -12,10 +12,6 @@ export default function List() {
 		const data = response.data;
 		setMarkers(data);
 		console.log(data);
-	}
-
-	function alertClicked() {
-		alert("You clicked the ListGroupItem");
 	}
 
 	useEffect(() => {
@@ -33,25 +29,21 @@ export default function List() {
 				<ListGroup>
 					{markers.map((marker) => {
 						return (
-							<ListGroupItem
-								className="ListGroupItem"
-								action
-								onClick={alertClicked}
-								action
-								variant="light"
-							>
-								<div style={{ fontWeight: "bold" }}>{marker.name}</div>
+							<ListGroupItem className="ListGroupItem" action variant="light">
+								<div style={{ fontWeight: "bold" }}> {marker.name} </div>
 								<div>
-									${marker.price}
-									{marker.discount} Off
+									${marker.price} %{(marker.discount * 100).toFixed(2)} Off
 								</div>
-								<div>{marker.product}</div>
+								<div> {marker.product} </div>
 								<div>
 									<a
-										href="mailto:email@echoecho.com?subject=SweetWords
-&body=Please send me a copy of your new program!"
+										href={`mailto:?subject=${
+											marker.name
+										} Discount!&body=Check out this deal! ${marker.name} at % ${
+											marker.discount * 100
+										} off!`}
 									>
-										Email Me
+										Share this Deal!
 									</a>
 								</div>
 							</ListGroupItem>
