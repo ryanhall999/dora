@@ -1,4 +1,6 @@
 const pg = require("pg");
+const bcrypt = require("bcrypt");
+const jwt = require("jwt-simple");
 
 const faker = require("faker");
 
@@ -16,7 +18,7 @@ const getProducts = (amount) => {
 		let price = faker.commerce.price(0.99, 20.0, 2);
 		let descText = faker.lorem.sentence(5);
 		let nameText = faker.lorem.sentence(2);
-		let discount = (Math.random() * (0.05 + 0.5) + 0.02).toFixed(4);
+		let discount = (Math.random() * (0.05 + 0.5)).toFixed(2);
 		let img = faker.image.imageUrl(150, 150, "animals", true);
 		let lat = 30 + Math.random();
 		let lng = -81 - Math.random();
@@ -70,8 +72,13 @@ const sync = async () => {
 		DROP TABLE IF EXISTS markers;
 
 		CREATE TABLE users(
-			googleID VARCHAR NOT NULL,
-			name VARCHAR NOT NULL
+			googleID VARCHAR,
+			name VARCHAR,
+			id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+      username VARCHAR(100) UNIQUE,
+      password VARCHAR(100),
+			role VARCHAR(20) DEFAULT 'USER',
+			status VARCHAR(20) DEFAULT 'ACTIVE'
 		);
 
 		CREATE TABLE markers(
@@ -86,7 +93,6 @@ const sync = async () => {
 			description VARCHAR(255),
 			image VARCHAR(255)
 		);
-
 		INSERT INTO markers (name, lat, lng, discount, companyName, product, price, description) VALUES ('Ryans House', '30.303055', '-81.468359', '.1', 'RyanCo', 'test', '10.00', 'test');
 		INSERT INTO markers (name, lat, lng, discount, companyName, product, price, description) VALUES ('Ryans old House', '30.270565', '-81.464546', '.1', 'RyanCo', 'test', '10.00', 'test');
 		INSERT INTO markers (name, lat, lng, discount, companyName, product, price, description) VALUES ('Ryans older House', '30.302785', '-81.566143', '.1', 'RyanCo', 'test', '10.00', 'test');
@@ -95,9 +101,24 @@ const sync = async () => {
 	await client.query(SQL);
 
 	const _products = getProducts(22);
+	const _users = [
+		{
+			googleID: 1,
+			name: "bob",
+			username: "bob@bob.com",
+			password: "BOB",
+			role: "ADMIN",
+		},
+	];
 
 	const [foo, bar, bazz] = await Promise.all(
 		Object.values(_products).map((product) => createMarkers(product))
+	);
+
+	const [lucy, moe] = await Promise.all(
+		Object.values(_users).map((user) =>
+			createUserByEmail(user.username, user.password, user.role)
+		)
 	);
 };
 
@@ -132,10 +153,66 @@ const addMarker = async (marker) => {
 		.rows[0];
 };
 
+const findUserFromToken = async (token) => {
+	const id = jwt.decode(token, process.env.JWT).id;
+	const user = (await client.query("SELECT * FROM users WHERE id = $1", [id]))
+		.rows[0];
+	delete user.password;
+	return user;
+};
+
+const hash = (password) => {
+	console.log(password);
+	return new Promise((resolve, reject) => {
+		bcrypt.hash(password, 10, (err, hashed) => {
+			if (err) {
+				return reject(err);
+			}
+			return resolve(hashed);
+		});
+	});
+};
+
+const compare = ({ plain, hashed }) => {
+	return new Promise((resolve, reject) => {
+		bcrypt.compare(plain, hashed, (err, verified) => {
+			if (err) {
+				console.log("no");
+				return reject(err);
+			}
+			if (verified) {
+				console.log("yes");
+				return resolve();
+			}
+			reject(Error("bad credentials"));
+		});
+	});
+};
+
+const authenticate = async ({ userName, password }) => {
+	const user = (
+		await client.query("SELECT * FROM users WHERE username=$1", [userName])
+	).rows[0];
+	await compare({ plain: password, hashed: user.password });
+	console.log(user.id);
+	const words = await jwt.encode({ id: user.id }, process.env.JWT);
+	console.log(words);
+	return words;
+};
+
+const createUserByEmail = async (username, password, role, status) => {
+	const SQL = `INSERT INTO users(username, password, role, status) values($1, $2, $3, $4) returning *`;
+	return (
+		await client.query(SQL, [username, await hash(password), role, status])
+	).rows[0];
+};
+
 module.exports = {
 	sync,
 	createUser,
+	createUserByEmail,
 	findUser,
 	getMarkers,
 	addMarker,
+	authenticate,
 };

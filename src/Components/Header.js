@@ -5,8 +5,10 @@ import Login from "./Login";
 import Logout from "./Logout";
 import Home from "./Home";
 import Map from "./Map";
+import List from "./List";
 import LoginScreen from "./LoginScreen";
 import axios from "axios";
+import Create from "./Create";
 
 export default function Header() {
   const [user, setUser] = useState({});
@@ -39,6 +41,12 @@ export default function Header() {
             </Nav.Link>
             <Nav.Link href="/login" component={LoginScreen}>
               Login
+            </Nav.Link>
+            <Nav.Link href="/create" component={Create}>
+              Create New User
+            </Nav.Link>
+            <Nav.Link href="/list" component={List}>
+              List
             </Nav.Link>
             <Navbar.Text>
               Signed in as: {user.googleid ? <p>{user.name}</p> : null}
