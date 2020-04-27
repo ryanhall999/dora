@@ -14,6 +14,7 @@ import LoginScreen from "./Components/LoginScreen";
 import Header from "./Components/Header";
 import Map from "./Components/Map";
 import List from "./Components/List";
+import Create from "./Components/Create";
 
 const App = () => {
 	console.log(LoginScreen);
@@ -24,6 +25,7 @@ const App = () => {
 				<Switch>
 					<Route exact path="/" component={Home} />
 					<Route path="/login" component={LoginScreen} />
+					<Route path="/create" component={Create} />
 					<Route path="/map" component={Map} />
 					<Route path="/list" component={List} />
 					<Route path="*" component={NotFound} />

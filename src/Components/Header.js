@@ -14,6 +14,7 @@ import {
 	Link,
 	Redirect,
 } from "react-router-dom";
+import Create from "./Create";
 
 export default function Header() {
 	return (
@@ -25,6 +26,9 @@ export default function Header() {
 				</Nav.Link>
 				<Nav.Link href="/login" component={LoginScreen}>
 					Login
+				</Nav.Link>
+				<Nav.Link href="/create" component={Create}>
+					Create New User
 				</Nav.Link>
 				<Nav.Link href="/map" component={Map}>
 					Map
