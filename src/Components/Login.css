@@ -13,3 +13,16 @@
   margin: 0 auto;
   max-width: 320px;
 }
+
+.transbox {
+  margin: 30px;
+  background-color: #ffffff;
+  border: 1px solid black;
+  opacity: 0.6;
+}
+
+.transbox {
+  margin: 5%;
+  font-weight: bold;
+  color: #000000;
+}
