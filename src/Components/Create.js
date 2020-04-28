@@ -7,11 +7,13 @@ export default function Create() {
 	async function handleClick(e) {
 		e.preventDefault();
 		let email = e.target.form[0].value;
-		let password = e.target.form[1].value;
-		let newUser = { name: email, password: password };
-		await Axios.post("/api/users", newUser).then((response) =>
-			console.log(response)
-		);
+		let name = e.target.form[1].value;
+		let password = e.target.form[2].value;
+		let newUser = { username: email, name: name, password: password };
+		await Axios.post("/api/users", newUser).then((response) => {
+			console.log(response);
+			alert("User Created");
+		});
 	}
 
 	return (
@@ -24,7 +26,10 @@ export default function Create() {
 						We'll never share your email with anyone else.
 					</Form.Text>
 				</Form.Group>
-
+				<Form.Group controlId="formBasicEmail">
+					<Form.Label>User Name</Form.Label>
+					<Form.Control type="text" placeholder="Name" />
+				</Form.Group>
 				<Form.Group controlId="formBasicPassword">
 					<Form.Label>Password</Form.Label>
 					<Form.Control type="password" placeholder="Password" />
