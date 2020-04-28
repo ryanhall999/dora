@@ -51,7 +51,8 @@ export default function Map({ options, onMount, className, onMountProps }) {
 						<p>${marker.description}</p>
 						<a href=mailto:?subject=${marker.name} Discount!&body=Check out this deal! ${
 							marker.name
-						} at % ${marker.discount * 100} off!>Share this Deal!</a>`,
+						} at % ${marker.discount * 100} off!>Share this Deal!</a>
+						<a href="${marker.url}">View This Deal!</a>`,
 						maxWidth: 500,
 					});
 					var marker = new google.maps.Marker({
@@ -59,8 +60,8 @@ export default function Map({ options, onMount, className, onMountProps }) {
 							lat: marker.lat,
 							lng: marker.lng,
 						},
+						icon: "http://maps.google.com/mapfiles/kml/pal3/icon18.png",
 						map: map,
-						label: marker.name,
 					});
 					marker.addListener("click", function () {
 						infowindow.open(map, marker);

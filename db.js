@@ -20,6 +20,7 @@ const getProducts = (amount) => {
 		let nameText = faker.lorem.sentence(2);
 		let discount = (Math.random() * (0.05 + 0.5)).toFixed(2);
 		let img = faker.image.imageUrl(150, 150, "animals", true);
+		let url = faker.internet.url();
 		let lat = 30 + Math.random();
 		let lng = -81 - Math.random();
 		let newProd = {
@@ -32,6 +33,7 @@ const getProducts = (amount) => {
 			price: price,
 			description: descText,
 			image: img,
+			url: url,
 		};
 		products.push(newProd);
 	}
@@ -48,8 +50,9 @@ const createMarkers = async ({
 	price,
 	description,
 	image,
+	url,
 }) => {
-	const SQL = `INSERT INTO markers(name, lat, lng, discount, price, companyName, product, description, image) values($1, $2, $3, $4, $5, $6, $7, $8, $9) returning *`;
+	const SQL = `INSERT INTO markers(name, lat, lng, discount, price, companyName, product, description, image, url) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning *`;
 	return (
 		await client.query(SQL, [
 			name,
@@ -61,6 +64,7 @@ const createMarkers = async ({
 			product,
 			description,
 			image,
+			url,
 		])
 	).rows[0];
 };
@@ -91,11 +95,12 @@ const sync = async () => {
 			product VARCHAR(255),
 			price DECIMAL,
 			description VARCHAR(255),
-			image VARCHAR(255)
+			image VARCHAR(255),
+			url VARCHAR(255)
 		);
-		INSERT INTO markers (name, lat, lng, discount, companyName, product, price, description) VALUES ('Ryans House', '30.303055', '-81.468359', '.1', 'RyanCo', 'test', '10.00', 'test');
-		INSERT INTO markers (name, lat, lng, discount, companyName, product, price, description) VALUES ('Ryans old House', '30.270565', '-81.464546', '.1', 'RyanCo', 'test', '10.00', 'test');
-		INSERT INTO markers (name, lat, lng, discount, companyName, product, price, description) VALUES ('Ryans older House', '30.302785', '-81.566143', '.1', 'RyanCo', 'test', '10.00', 'test');
+		INSERT INTO markers (name, lat, lng, discount, companyName, product, price, description, url) VALUES ('Ryans House', '30.303055', '-81.468359', '.1', 'RyanCo', 'test', '10.00', 'test', 'https://neoma.org');
+		INSERT INTO markers (name, lat, lng, discount, companyName, product, price, description, url) VALUES ('Ryans old House', '30.270565', '-81.464546', '.1', 'RyanCo', 'test', '10.00', 'test', 'https://neoma.org');
+		INSERT INTO markers (name, lat, lng, discount, companyName, product, price, description, url) VALUES ('Ryans older House', '30.302785', '-81.566143', '.1', 'RyanCo', 'test', '10.00', 'test', 'https://neoma.org');
 
 	`;
 	await client.query(SQL);
@@ -117,7 +122,13 @@ const sync = async () => {
 
 	const [lucy, moe] = await Promise.all(
 		Object.values(_users).map((user) =>
-			createUserByEmail(user.username, user.password, user.role)
+			createUserByEmail(
+				user.googleID,
+				user.username,
+				user.name,
+				user.password,
+				user.role
+			)
 		)
 	);
 };
@@ -177,11 +188,9 @@ const compare = ({ plain, hashed }) => {
 	return new Promise((resolve, reject) => {
 		bcrypt.compare(plain, hashed, (err, verified) => {
 			if (err) {
-				console.log("no");
 				return reject(err);
 			}
 			if (verified) {
-				console.log("yes");
 				return resolve();
 			}
 			reject(Error("bad credentials"));
@@ -194,16 +203,28 @@ const authenticate = async ({ userName, password }) => {
 		await client.query("SELECT * FROM users WHERE username=$1", [userName])
 	).rows[0];
 	await compare({ plain: password, hashed: user.password });
-	console.log(user.id);
 	const words = await jwt.encode({ id: user.id }, process.env.JWT);
-	console.log(words);
 	return words;
 };
 
-const createUserByEmail = async (username, password, role, status) => {
-	const SQL = `INSERT INTO users(username, password, role, status) values($1, $2, $3, $4) returning *`;
+const createUserByEmail = async (
+	googleID,
+	username,
+	name,
+	password,
+	role,
+	status
+) => {
+	const SQL = `INSERT INTO users(googleID, username, name, password, role, status) values($1, $2, $3, $4, $5, $6) returning *`;
 	return (
-		await client.query(SQL, [username, await hash(password), role, status])
+		await client.query(SQL, [
+			googleID,
+			username,
+			name,
+			await hash(password),
+			role,
+			status,
+		])
 	).rows[0];
 };
 
@@ -215,4 +236,5 @@ module.exports = {
 	getMarkers,
 	addMarker,
 	authenticate,
+	findUserFromToken,
 };

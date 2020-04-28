@@ -25,7 +25,33 @@ const isAdmin = (req, res, next) => {
 	next();
 };
 
+const authCheck = (req, res, next) => {
+	if (!req.user) {
+		res.redirect("/");
+	} else {
+		next();
+	}
+};
+
 app.use(express.json());
+
+app.use((req, res, next) => {
+	const token = req.headers.authorization;
+	if (!token) {
+		return next();
+	}
+	db.findUserFromToken(token)
+		.then((auth) => {
+			req.user = auth;
+			console.log(req.user);
+			next();
+		})
+		.catch((ex) => {
+			const error = Error("not authorized");
+			error.status = 401;
+			next(error);
+		});
+});
 
 app.use(
 	cookieSession({
@@ -70,14 +96,6 @@ app.get(
 	}
 );
 
-const authCheck = (req, res, next) => {
-	if (!req.user) {
-		res.redirect("/");
-	} else {
-		next();
-	}
-};
-
 app.get("/loggedIn", authCheck, (req, res) => {
 	res.send(req.user);
 });
@@ -91,19 +109,36 @@ app.get("/api/markers", (req, res, next) => {
 	db.getMarkers().then((markers) => res.send(markers));
 });
 
-app.get("*", (req, res, next) => {
-	res.sendFile(path.join(__dirname, "/index.html"));
-});
-
 app.post("/api/users", (req, res, next) => {
 	console.log(req.body.name);
-	db.createUserByEmail(req.body.name, req.body.password, null, "active")
+	db.createUserByEmail(
+		"1",
+		req.body.username,
+		req.body.name,
+		req.body.password,
+		null,
+		"active"
+	)
 		.then((user) => res.send(user))
 		.catch(next);
 });
 
 app.get("/api/auth", isLoggedIn, (req, res, next) => {
-	res.send(req.user);
+	const token = req.headers.authorization;
+	if (!token) {
+		return next();
+	}
+	db.findUserFromToken(token)
+		.then((auth) => {
+			user = auth;
+			console.log(user);
+			res.send(user);
+		})
+		.catch((ex) => {
+			const error = Error("not authorized");
+			error.status = 401;
+			next(error);
+		});
 });
 
 app.post("/api/auth", (req, res, next) => {
@@ -117,6 +152,10 @@ app.post("/api/auth", (req, res, next) => {
 			error.status = 401;
 			next(error);
 		});
+});
+
+app.get("*", (req, res, next) => {
+	res.sendFile(path.join(__dirname, "/index.html"));
 });
 
 db.sync().then(() => {

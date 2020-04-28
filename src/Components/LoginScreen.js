@@ -13,6 +13,15 @@ export default function Login(props) {
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [error, setError] = useState("");
 
+	const headers = () => {
+		const token = window.localStorage.getItem("token");
+		return {
+			headers: {
+				authorization: token,
+			},
+		};
+	};
+
 	const validateForm = () => {
 		return userName && password;
 	};
@@ -22,7 +31,6 @@ export default function Login(props) {
 	};
 
 	const login = async (credentials) => {
-		console.log(credentials);
 		const token = (await Axios.post("/api/auth", credentials)).data.token;
 		window.localStorage.setItem("token", token);
 		exchangeTokenForAuth();
@@ -30,16 +38,17 @@ export default function Login(props) {
 
 	const exchangeTokenForAuth = async () => {
 		const response = await Axios.get("/api/auth", headers());
+		console.log(response);
 		setAuth(response.data);
 		if (response.data.role === "ADMIN") {
 			console.log("user is admin");
 			setIsAdmin(true);
 		}
 	};
+	console.log(auth);
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		console.log(userName, password);
 		login({ userName, password }).catch((ex) =>
 			setError(ex.response.data.message)
 		);
