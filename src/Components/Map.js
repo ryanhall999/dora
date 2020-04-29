@@ -113,7 +113,7 @@ export default function Map({ options, onMount, className, onMountProps }) {
 			// zoomControl: false,
 			// scrollwheel: false,
 			disableDoubleClickZoom: true,
-			zoom: 12,
+			zoom: 10,
 			styles: styles,
 		});
 		return map;
