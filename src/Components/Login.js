@@ -1,15 +1,10 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 
-const Login = (props) => {
-	console.log(props);
+const Login = props => {
+  console.log(props);
 
-	return (
-		<div>
-			<a href="/google">
-				<button>Sign in with Google</button>
-			</a>
-		</div>
-	);
+  return <Button>Login</Button>;
 };
 
 export default Login;
