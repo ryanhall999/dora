@@ -56,7 +56,7 @@ export default function List() {
 										<a href={marker.url}>{marker.name}</a>
 									</td>
 									<td>
-										${marker.price} %{(marker.discount * 100).toFixed(2)} Off
+										${marker.price} @ %{(marker.discount * 100).toFixed(2)} Off
 									</td>
 									<td> {marker.product} </td>
 									<td>
