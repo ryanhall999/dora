@@ -21,6 +21,10 @@ export default function Header() {
     });
   }, []);
 
+  const loginText = {
+    color: "white"
+  };
+
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Navbar.Brand href="/">
@@ -46,7 +50,7 @@ export default function Header() {
             <Nav.Link href="/list" component={List}>
               List
             </Nav.Link>
-            <Navbar.Text>
+            <Navbar.Text style={loginText}>
               {user.googleid ? <p>Signed in as: {user.name}</p> : null}
             </Navbar.Text>
             <Nav.Link href="/login" component={LoginScreen}>
