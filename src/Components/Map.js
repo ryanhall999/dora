@@ -89,6 +89,13 @@ export default function Map({ options, onMount, className, onMountProps }) {
 		},
 	];
 
+	const addStyle = () => {
+		let elem = document.getElementById("map");
+		elem.style.height = "100%";
+		elem.style.margin = "0.5 rem";
+		elem.style.borderRadius = "0.5em";
+	};
+
 	async function getLocation() {
 		let location = await getCurrentPosition();
 		let locationCurrent = {
@@ -121,6 +128,7 @@ export default function Map({ options, onMount, className, onMountProps }) {
 
 	useEffect(() => {
 		getLocation();
+		addStyle();
 		initMap().then(async (map) => {
 			// get the amrkers from the db
 			await getMarkers().then((returnedMarkers) => {
