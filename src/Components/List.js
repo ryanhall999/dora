@@ -51,7 +51,7 @@ export default function List() {
 					<tbody>
 						{markers.map((marker) => {
 							return (
-								<tr>
+								<tr key={marker.id}>
 									<td style={{ fontWeight: "bold" }}> {marker.name} </td>
 									<td>
 										${marker.price} %{(marker.discount * 100).toFixed(2)} Off

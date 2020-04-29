@@ -21,7 +21,7 @@ export default function Home() {
 				<Card.Img
 					src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?ixlib=rb-1.2.1&w=1000&q=80"
 					alt="Card image"
-					class="background"
+					className="background"
 				/>
 				<Card.ImgOverlay>
 					<Card.Title>
