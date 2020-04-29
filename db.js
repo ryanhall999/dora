@@ -21,8 +21,8 @@ const getProducts = (amount) => {
 		let discount = (Math.random() * (0.05 + 0.5)).toFixed(2);
 		let img = faker.image.imageUrl(150, 150, "animals", true);
 		let url = faker.internet.url();
-		let lat = 30 + Math.random();
-		let lng = -81 - Math.random();
+		let lat = 30.29693 + Math.random();
+		let lng = -81.391893 - Math.random();
 		let newProd = {
 			name: prodName,
 			lat: lat,
