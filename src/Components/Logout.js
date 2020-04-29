@@ -1,16 +1,14 @@
-import React from 'react'
+import React from "react";
+import { Button } from "react-bootstrap";
 
 const Logout = () => {
-  
   return (
     <div>
       <a href="/logout">
-        <button>
-          Logout
-        </button>
+        <Button variant="danger">Logout</Button>
       </a>
     </div>
-  )
-}
+  );
+};
 
-export default Logout
+export default Logout;
