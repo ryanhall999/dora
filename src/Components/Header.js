@@ -44,9 +44,9 @@ export default function Header() {
             <Nav.Link href="/map" component={Map}>
               Map
             </Nav.Link>
-            <Nav.Link href="/create" component={Create}>
+            {/* <Nav.Link href="/create" component={Create}>
               Create New User
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link href="/list" component={List}>
               List
             </Nav.Link>

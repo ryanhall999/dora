@@ -18,7 +18,7 @@ passport.use(
     {
       clientID: keys.google.clientID,
       clientSecret: keys.google.clientSecret,
-      callbackURL: "https://headcount-discount.herokuapp.com/google/callback"
+      callbackURL: "http://localhost:3000/google/callback"
     },
     (accessToken, refreshToken, profile, done) => {
       db.createUser(profile.id, profile.displayName).then(user => {

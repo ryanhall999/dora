@@ -9,9 +9,9 @@
 }
 
 .google-button {
-  padding: 10px 0 0 0;
-  margin: 0 auto;
-  max-width: 320px;
+  padding: 10px 10px 10px 10px;
+  /* margin: 0 auto; */
+  width: auto;
 }
 
 .transbox {
@@ -25,4 +25,9 @@
   margin: 5%;
   font-weight: bold;
   color: #000000;
+}
+
+.createButton {
+  padding: 10px;
+  width: auto;
 }
